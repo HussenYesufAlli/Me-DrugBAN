@@ -74,7 +74,17 @@ api_key=YOUR-API-KEY
 If you use ideas or code from this project, cite:
 Peizhen Bai et al., Interpretable bilinear attention network with domain adaptation improves drug-target prediction. Nature Machine Intelligence (2023). DOI: 10.1038/s42256-022-00605-1
 
-## Notes / TODO
-- Add environment.yml (I can generate it for you)
-- Confirm the training entrypoint filename in this copy (main.py or train.py) and update the commands above
-- Document any local changes made while retyping code
+## High-level incremental plan
+- [ ] data-loader — reproducible, small API that returns a DGL/torch graph and protein sequence.
+- [ ] gnn-backbone — a small, testable GNN model (GraphConv / MLP fallback).
+- [ ] protein-encoder — placeholder encoder (one-hot / small CNN / option to plug pretrained later).
+- [ ] ban-module — compose protein encoder + gnn backbone: forward(protein_seq, mol_graph) -> prediction.
+- [ ] train-loop — training and eval steps, checkpoint save/load, metrics.
+- [ ] domain-adapt — lightweight adaptor interfaces (stubbed for now), tests to exercise the flow.
+- [ ] tests & CI — smoke tests and integration tests (small synthetic data), CI workflow to run environment.yml and pytest
+## Make directories
+- mkdir -p src/me_drugban/data_loader
+- mkdir -p src/me_drugban/gnn_backbone
+- mkdir -p src/me_drugban/protein_encoder
+- mkdir -p src/me_drugban/domain_adapt
+- mkdir -p tests
