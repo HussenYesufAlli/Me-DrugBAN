@@ -1,82 +1,80 @@
-# ME-drugBAN
-Interpretable bilinear attention network with domain adaptation for drug-target interaction prediction — local copy and notes for my ME-drugBAN project.
+# ME-drugBAN — local learning copy of DrugBAN
+
+Interpretable bilinear attention network with domain adaptation for drug–target interaction prediction. This is my local, annotated copy of DrugBAN used for step-by-step retyping and learning. Original project and paper: https://doi.org/10.1038/s42256-022-00605-1
 
 ## Summary
-This repository is a local copy and working space for DrugBAN, a bilinear attention network that models drug–target interactions using 2D drug graphs and protein sequences, with optional adversarial domain adaptation to improve out-of-distribution performance. See: [Nature Machine Intelligence paper](https://doi.org/10.1038/s42256-022-00605-1).
+This repository contains a PyTorch implementation of DrugBAN: a bilinear attention network (BAN) with optional adversarial domain adaptation to model drug–target interactions using 2D molecular graphs and protein sequences. This local copy (ME-drugBAN) is used for educational purposes: I will retype and annotate core modules (data pipeline, model, training loop) to deeply understand the approach.
 
 ## Quick start (demo)
-1. Create and activate a conda environment:
-```bash
+1. Create and activate conda environment:
+```
 conda create -n me-drugban python=3.8 -y
 conda activate me-drugban
 ```
-2. Install core dependencies (adjust versions as needed):
-```bash
+2. Install core dependencies (adjust versions to your setup/GPU):
+```
 conda install pytorch==1.7.1 torchvision==0.8.2 torchaudio==0.7.2 cudatoolkit=10.2 -c pytorch
 conda install -c dglteam dgl-cuda10.2==0.7.1
 conda install -c conda-forge rdkit==2021.03.2
-pip install dgllife==0.2.8 scikit-learn yacs prettytable
+pip install dgllife==0.2.8 scikit-learn yacs prettytable comet-ml
 ```
 3. Prepare datasets:
-- Place datasets under `datasets/` (see datasets/README.md).
-4. Run a demo training (example):
-```bash
-# If the repo uses a train script named `train.py` and config files in configs/
-python train.py --config configs/DrugBAN_Demo.yaml
+- Place datasets under `datasets/` (see `datasets/README.md`).
+4. Run a short demo training (example):
 ```
-(If the real entrypoint is different, replace `train.py` with your actual script name.)
+python main.py --cfg "configs/DrugBAN_Demo.yaml" --data bindingdb --split random
+```
+(Replace `main.py` with the actual entrypoint filename if different.)
 
 ## System requirements
 - Python 3.8
 - PyTorch >= 1.7.1
-- DGL, dgllife
-- RDKit for SMILES → molecule conversions (install via conda-forge)
-- Not strictly required: GPU (faster), but CPU should work for small demo runs.
-
-## Project structure (edit to match your local tree)
-- configs/ — YAML configs for experiments
-- datasets/ — sample and full datasets (train/val/test CSVs)
-- models/ or src/ — model implementations (BAN, domain adaptation modules)
-- train.py / main.py — training and evaluation entrypoint(s)
-- drugban_demo.ipynb — Colab demo notebook
-- result/ — output directory for checkpoints, logs and metrics
-
-## Configuration & running experiments
-- Edit or copy configs/*.yaml to change hyperparameters (batch size, lr, DA settings).
-- Example: to run non-domain-adaptive training:
-```bash
-python train.py --config configs/DrugBAN_Non_DA.yaml
-```
-- To run domain-adaptive training:
-```bash
-python train.py --config configs/DrugBAN_DA.yaml
-```
-(Confirm the exact CLI arguments in your repo; search for argparse or config loader to find the real flags.)
+- DGL, dgllife, RDKit
+- GPU recommended (for full datasets): GPU RAM >= 8GB; system RAM >= 16GB
 
 ## Datasets
-- Original datasets come from BindingDB, BioSNAP (MolTrans), Human (TransformerCPI). See `datasets/README.md` for references.
-- CSV format expected (example header):
+- Source datasets: BindingDB, BioSNAP (MolTrans), Human (TransformerCPI).
+- Expected CSV format:
 ```
 SMILES,Protein,Y
 ```
-- Place large datasets outside Git if they are big and update .gitignore accordingly.
+- Place large datasets under `datasets/` and do not commit them to git.
 
-## Development notes (for my learning)
-- I will retype key components (data preprocessing, model implementation, training loop) to fully understand every line.
-- Document major changes here with dates and intent.
-- Keep experiments reproducible by saving config files and random seeds.
+## How I will work (development notes)
+- I will retype and annotate the following in this order:
+  1. Data preprocessing and dataset classes
+  2. Graph construction (RDKit → DGL graphs)
+  3. Model: BAN modules, attention, domain-adaptation modules
+  4. Training loop, logging and evaluation
+- I will keep small commits for each file retyped for revertability and clarity.
 
-## Running checks & debugging tips
-- Search for the training entrypoint:
-```bash
-grep -R "if __name__ == '__main__'" -n .
+## Project structure (short)
+- configs/ — YAML configs for experiments
+- datasets/ — dataset CSVs and scripts
+- image/ — figures used in README
+- drugban_demo.ipynb — demo notebook (Colab)
+- main.py (or train.py) — training/evaluation entrypoint
+- src/ or models/ — model implementations (if present)
+
+## Reproducibility checklist
+- [ ] Save the exact config file used for each run (configs/*.yaml)
+- [ ] Save random seed and environment.yml (or conda list > packages.txt)
+- [ ] Keep a short note of run time and hardware used
+
+## Comet ML (optional)
+- Install: `pip install comet_ml`
+- Put API key in `~/.comet.config`:
 ```
-- Inspect config loader (search for yacs or config file parsing) to see how to pass configs.
-- Use small dataset slice (configs/DrugBAN_Demo.yaml) for quick debugging.
+[comet]
+api_key=YOUR-API-KEY
+```
+- Enable in configs if you want to track runs.
 
 ## Citation
-If you use this work, please cite:
-Peizhen Bai et al., Interpretable bilinear attention network with domain adaptation improves drug-target prediction. Nature Machine Intelligence (2022). DOI: 10.1038/s42256-022-00605-1
+If you use ideas or code from this project, cite:
+Peizhen Bai et al., Interpretable bilinear attention network with domain adaptation improves drug-target prediction. Nature Machine Intelligence (2023). DOI: 10.1038/s42256-022-00605-1
 
-## License
-This project is under the MIT License (adjust if you changed license).
+## Notes / TODO
+- Add environment.yml (I can generate it for you)
+- Confirm the training entrypoint filename in this copy (main.py or train.py) and update the commands above
+- Document any local changes made while retyping code
