@@ -1,9 +1,9 @@
-# ME-drugBAN — local learning copy of DrugBAN
+# Me-drugBAN — copy of DrugBAN
 
 Interpretable bilinear attention network with domain adaptation for drug–target interaction prediction. This is my local, annotated copy of DrugBAN used for step-by-step retyping and learning. Original project and paper: https://doi.org/10.1038/s42256-022-00605-1
-
+## github: https://github.com/peizhenbai/DrugBAN
 ## Summary
-This repository contains a PyTorch implementation of DrugBAN: a bilinear attention network (BAN) with optional adversarial domain adaptation to model drug–target interactions using 2D molecular graphs and protein sequences. This local copy (ME-drugBAN) is used for educational purposes: I will retype and annotate core modules (data pipeline, model, training loop) to deeply understand the approach.
+This repository contains a PyTorch implementation of DrugBAN: a bilinear attention network (BAN) with optional adversarial domain adaptation to model drug–target interactions using 2D molecular graphs and protein sequences. This Me-drugBAN is used for educational purposes: I will retype and annotate core modules (data pipeline, model, training loop) to deeply understand the approach.
 
 ## Quick start (demo)
 1. Create and activate conda environment:
