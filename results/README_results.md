@@ -75,7 +75,6 @@ This document summarizes the main results and evaluation metrics for the Me-Drug
 - The training, evaluation, and visualization workflow is fully reproducible (tested on WSL).
 - All model artifacts and metrics are saved for further analysis.
 - The repository is ready for extension to other datasets, ablation studies, or baseline comparisons.
-- For comparisons with other approaches (e.g., [CKAN-ATHP](https://github.com/Njq0104/CKAN-ATHP)), see the Related Work section in the main [README.md](../README.md).
 
 ---
 
