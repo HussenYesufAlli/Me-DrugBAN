@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 from dgllife.model.gnn import GCN
-
+import dgl
 # Encode each molecule (DGLGraph with node features) into a learnable representation using a Graph Convolutional Network (GCN).
 # Reference: Original DrugBAN: models.py lines 74-90
 
@@ -16,9 +16,10 @@ class MolecularGCN(nn.Module):
         self.output_feats = hidden_feats[-1]
 
     def forward(self, batch_graph):
-        node_feats = batch_graph.ndata.pop('h')
+        node_feats = batch_graph.ndata['h']
         node_feats = self.init_transform(node_feats)
         node_feats = self.gnn(batch_graph, node_feats)
-        batch_size = batch_graph.batch_size
-        node_feats = node_feats.view(batch_size, -1, self.output_feats)
-        return node_feats
+        # Store processed node features back in the graph under a new key
+        batch_graph.ndata['gnn_out'] = node_feats
+        graph_embeds = dgl.mean_nodes(batch_graph, 'gnn_out')
+        return graph_embeds

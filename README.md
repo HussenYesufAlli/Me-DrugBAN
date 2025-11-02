@@ -1,90 +1,157 @@
-# Me-drugBAN — copy of DrugBAN
+# Me-DrugBAN: Bilinear Attention Networks for Drug-Target Interaction
 
-Interpretable bilinear attention network with domain adaptation for drug–target interaction prediction. This is my local, annotated copy of DrugBAN used for step-by-step retyping and learning. Original project and paper: https://doi.org/10.1038/s42256-022-00605-1
-## github: https://github.com/peizhenbai/DrugBAN
-## Summary
-This repository contains a PyTorch implementation of DrugBAN: a bilinear attention network (BAN) with optional adversarial domain adaptation to model drug–target interactions using 2D molecular graphs and protein sequences. This Me-drugBAN is used for educational purposes: I will retype and annotate core modules (data pipeline, model, training loop) to deeply understand the approach.
+This repository is an annotated **copy and educational reimplementation of the original [DrugBAN](https://github.com/peizhenbai/DrugBAN)** project. It is tailored for learning and experimentation in a reproducible, modular way, and runs smoothly in WSL (Windows Subsystem for Linux).
 
-## Quick start (demo)
-1. Create and activate conda environment:
-```
-conda create -n me-drugban python=3.8 -y
-conda activate me-drugban
-```
-2. Install core dependencies (adjust versions to your setup/GPU):
-```
-conda install pytorch==1.7.1 torchvision==0.8.2 torchaudio==0.7.2 cudatoolkit=10.2 -c pytorch
-conda install -c dglteam dgl-cuda10.2==0.7.1
-conda install -c conda-forge rdkit==2021.03.2
-pip install dgllife==0.2.8 scikit-learn yacs prettytable comet-ml
-```
-3. Prepare datasets:
-- Place datasets under `datasets/` (see `datasets/README.md`).
-4. Run a short demo training (example):
-```
-python main.py --cfg "configs/DrugBAN_Demo.yaml" --data bindingdb --split random
-```
-(Replace `main.py` with the actual entrypoint filename if different.)
+---
 
-## System requirements
-- Python 3.8
-- PyTorch >= 1.7.1
-- DGL, dgllife, RDKit
-- GPU recommended (for full datasets): GPU RAM >= 8GB; system RAM >= 16GB
+## Table of Contents
 
-## Datasets
-- Source datasets: BindingDB, BioSNAP (MolTrans), Human (TransformerCPI).
-- Expected CSV format:
+- [Project Overview](#project-overview)
+- [Environment Setup (with WSL support)](#environment-setup-with-wsl-support)
+- [Dataset Preparation](#dataset-preparation)
+- [Project Structure](#project-structure)
+- [Training Pipeline](#training-pipeline)
+- [Testing & Evaluation](#testing--evaluation)
+- [Reproducibility Checklist](#reproducibility-checklist)
+- [Citation](#citation)
+- [Acknowledgements](#acknowledgements)
+
+---
+
+## Project Overview
+
+This repository contains a PyTorch re-type and annotation of DrugBAN: a bilinear attention network (BAN) for drug–target interaction (DTI) prediction by combining molecular graph features (for drugs) and protein sequence features, fused by a bilinear attention mechanism. This implementation is modular, allowing easy extension and reproducibility.We copy and reimplement the original DrugBAN pipeline.
+
+---
+
+## Environment Setup (with WSL support)
+
+1. **Clone the repository:**
+   ```sh
+   git clone https://github.com/HussenYesufAlli/Me-DrugBAN.git
+   cd Me-DrugBAN
+   ```
+
+2. **If using WSL:**  
+   Ensure you have conda (Anaconda/Miniconda) or mamba installed in your WSL environment. Follow [this guide](https://docs.microsoft.com/en-us/windows/wsl/tutorials/wsl-containers) if needed.
+
+3. **Create and activate the conda environment:**
+   ```sh
+   conda env create -f environment.yml
+   conda activate me-drugban
+   ```
+   > _This installs Python 3.8, PyTorch, DGL, RDKit, dgllife, and all other dependencies._
+
+---
+
+## Dataset Preparation
+
+1. **Obtain the datasets** (BindingDB, BioSNAP, Human, etc.) in the following format:
+   ```csv
+   SMILES,Protein,Y
+   CC(C)CC1=CC=C(C=C1)C(C)C(=O)O,MEGTVK...,1
+   ```
+
+2. **Place datasets under the `data/` directory (note: not `datasets/`):**
+   ```
+   data/
+     bindingdb/
+       random/
+         train.csv
+         val.csv
+         test.csv
+       cluster/
+         source_train.csv
+         target_train.csv
+         target_test.csv
+       full.csv
+     bindingdb_sample/
+       train.csv
+       val.csv
+       test.csv
+     biosnap/
+       ...
+     human/
+       ...
+   ```
+   > _This matches the structure in the original DrugBAN but uses `data/` as the top-level directory, as in this repo._
+
+---
+
+## Project Structure
+
 ```
-SMILES,Protein,Y
+Me-DrugBAN/
+│
+├── data/                  # All dataset CSVs (see above; was 'datasets/' in original DrugBAN)
+├── scripts/               # Entrypoint scripts (train.py, etc.)
+├── src/
+│   └── me_drugban/
+│       ├── data_loader/
+│       ├── gnn_backbone/
+│       ├── protein_encoder/
+│       ├── ban_module/
+│       ├── train_loop/
+│       └── model.py
+├── tests/
+├── environment.yml
+├── README.md
+├── pyproject.toml, setup.py
+└── ...
 ```
-- Place large datasets under `datasets/` and do not commit them to git.
 
-## How I will work (development notes)
-- I will retype and annotate the following in this order:
-  1. Data preprocessing and dataset classes
-  2. Graph construction (RDKit → DGL graphs)
-  3. Model: BAN modules, attention, domain-adaptation modules
-  4. Training loop, logging and evaluation
-- I will keep small commits for each file retyped for revertability and clarity.
+---
 
-## Project structure (short)
-- configs/ — YAML configs for experiments
-- datasets/ — dataset CSVs and scripts
-- image/ — figures used in README
-- drugban_demo.ipynb — demo notebook (Colab)
-- main.py (or train.py) — training/evaluation entrypoint
-- src/ or models/ — model implementations (if present)
+## Training Pipeline
 
-## Reproducibility checklist
-- [ ] Save the exact config file used for each run (configs/*.yaml)
-- [ ] Save random seed and environment.yml (or conda list > packages.txt)
-- [ ] Keep a short note of run time and hardware used
+1. **Edit your training script (e.g. `scripts/train.py`):**
+   ```python
+   train_path = "data/bindingdb/random/train.csv"
+   val_path   = "data/bindingdb/random/val.csv"
+   ```
 
-## Comet ML (optional)
-- Install: `pip install comet_ml`
-- Put API key in `~/.comet.config`:
-```
-[comet]
-api_key=YOUR-API-KEY
-```
-- Enable in configs if you want to track runs.
+2. **Run training:**
+   ```sh
+   python scripts/train.py
+   ```
+   - This will load real data, initialize the model, and train for the specified epochs.
+   - Checkpoints and logs will be saved (e.g., `best_drugban.pt`, `training_history.pkl`).
+
+---
+
+## Testing & Evaluation
+
+- For evaluation on the test set, use or adapt `scripts/test_model_forward.py`:
+   ```python
+   test_path = "data/bindingdb/random/test.csv"
+   # ... load best_drugban.pt and evaluate
+   ```
+
+---
+
+## Reproducibility Checklist
+
+- [x] Use the provided `environment.yml` to recreate the environment (works in WSL).
+- [x] Store and document dataset splits and preprocessing under `data/`.
+- [x] Save the exact config/hyperparameters for each run (in configs/ or as script args).
+- [x] Save random seed and environment version (`conda list > packages.txt`).
+- [x] Record hardware (GPU/CPU, RAM) for each experiment.
+- [x] Save trained models and logs.
+
+---
 
 ## Citation
-If you use ideas or code from this project, cite:
-Peizhen Bai et al., Interpretable bilinear attention network with domain adaptation improves drug-target prediction. Nature Machine Intelligence (2023). DOI: 10.1038/s42256-022-00605-1
 
-## High-level incremental plan
-- [ ] data-loader — reproducible, small API that returns a DGL/torch graph and protein sequence.
-- [ ] gnn-backbone — a small, testable GNN model (GraphConv / MLP fallback).
-- [ ] protein-encoder — placeholder encoder (one-hot / small CNN / option to plug pretrained later).
-- [ ] ban-module — compose protein encoder + gnn backbone: forward(protein_seq, mol_graph) -> prediction.
-- [ ] train-loop — training and eval steps, checkpoint save/load, metrics.
-- [ ] domain-adapt — lightweight adaptor interfaces (stubbed for now), tests to exercise the flow.
-- [ ] tests & CI — smoke tests and integration tests (small synthetic data), CI workflow to run environment.yml and pytest
-## Make directories
-- mkdir -p src/me_drugban/data_loader
-- mkdir -p src/me_drugban/gnn_backbone
-- mkdir -p src/me_drugban/protein_encoder
-- mkdir -p src/me_drugban/domain_adapt
-- mkdir -p tests
+If you use this code, please cite:
+> Peizhen Bai et al., Interpretable bilinear attention network with domain adaptation improves drug-target prediction. Nature Machine Intelligence (2023). DOI: 10.1038/s42256-022-00605-1
+
+---
+
+## Acknowledgements
+
+- Original [DrugBAN repository](https://github.com/peizhenbai/DrugBAN) (this is a copy and learning reimplementation)
+- DGL, dgllife, RDKit, and PyTorch open-source communities
+
+---
+
+_For questions or contributions, please open an issue or pull request._

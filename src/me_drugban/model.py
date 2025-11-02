@@ -16,6 +16,10 @@ class DrugBAN(nn.Module):
     def forward(self, batch_graph, prot_tensor):
         v_d = self.drug_extractor(batch_graph)
         v_p = self.protein_extractor(prot_tensor)
-        f, att = self.fusion(v_d, v_p)   # BANLayer returns (fused_feature, attention_map)
+        if v_d.dim() == 2:
+            v_d = v_d.unsqueeze(1)  # shape: [batch, 1, v_dim]
+        if v_p.dim() == 2:
+            v_p = v_p.unsqueeze(1)  # shape: [batch, 1, q_dim]
+        f, att = self.fusion(v_d, v_p)
         score = self.mlp_classifier(f)
         return score
