@@ -13,6 +13,7 @@ This repository is an annotated **copy and educational reimplementation of the o
 - [Training Pipeline](#training-pipeline)
 - [Testing & Evaluation](#testing--evaluation)
 - [Reproducibility Checklist](#reproducibility-checklist)
+- [Related Work](#related-work)
 - [Citation](#citation)
 - [Acknowledgements](#acknowledgements)
 
@@ -140,6 +141,15 @@ Me-DrugBAN/
 
 ---
 
+## Related Work
+
+For additional approaches to drug-target interaction prediction, see:
+- [CKAN-ATHP](https://github.com/Njq0104/CKAN-ATHP): An alternative approach to drug-target interaction prediction using attention-based mechanisms.
+
+This repository (Me-DrugBAN) focuses on the bilinear attention network (BAN) approach from the original DrugBAN paper, providing a clean, educational reimplementation for learning and research purposes.
+
+---
+
 ## Citation
 
 If you use this code, please cite:
@@ -150,6 +160,7 @@ If you use this code, please cite:
 ## Acknowledgements
 
 - Original [DrugBAN repository](https://github.com/peizhenbai/DrugBAN) (this is a copy and learning reimplementation)
+- [CKAN-ATHP](https://github.com/Njq0104/CKAN-ATHP) for related work in drug-target interaction prediction
 - DGL, dgllife, RDKit, and PyTorch open-source communities
 
 ---
