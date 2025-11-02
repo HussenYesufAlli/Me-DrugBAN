@@ -1,4 +1,4 @@
 """GNN backbone models."""
-from .gnn import SimpleGNN
+from .gnn import MolecularGCN
 
-__all__ = ["SimpleGNN"]
+__all__ = ["MolecularGCN"]

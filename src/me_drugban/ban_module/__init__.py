@@ -1,4 +1,4 @@
 """Binding affinity network (BAN) module."""
-from .ban import BAN
+from .ban import SimpleFusion
 
-__all__ = ["BAN"]
+__all__ = ["SimpleFusion"]

@@ -1,4 +1,4 @@
 """Protein encoder utilities."""
-from .encoder import ProteinEncoder
+from .encoder import ProteinCNN
 
-__all__ = ["ProteinEncoder"]
+__all__ = ["ProteinCNN"]

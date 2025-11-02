@@ -1,16 +1,15 @@
-"""High-level BAN module that composes encoders and GNN backbones."""
-
-from typing import Any
-
-class BAN:
-    """Simple composition class. Replace with training/inference logic."""
-
-    def __init__(self, protein_encoder: Any, gnn_backbone: Any):
-        self.protein_encoder = protein_encoder
-        self.gnn_backbone = gnn_backbone
-
-    def predict(self, protein_seq: str, mol_features):
-        prot_vec = self.protein_encoder.encode(protein_seq)
-        # mol_features is expected to be a list/array of floats
-        return {"prot_vec_len": len(prot_vec), "mol_feats_len": len(mol_features)}
-    
+import torch
+import torch.nn as nn
+    # Combine the drug (GNN) and protein (CNN) feature matrices into a joint representation.
+    # Original DrugBAN uses a Bilinear Attention Network (BAN), which is implemented as a custom module.
+class SimpleFusion(nn.Module):
+    def __init__(self):
+        super(SimpleFusion, self).__init__()
+    def forward(self, v_d, v_p):
+        # v_d: (batch, drug_seq, d_dim), v_p: (batch, prot_seq, p_dim)
+        # For simple fusion, flatten and concatenate
+        v_d_flat = v_d.view(v_d.size(0), -1)
+        v_p_flat = v_p.view(v_p.size(0), -1)
+        f = torch.cat([v_d_flat, v_p_flat], dim=1)
+        return f
+        
