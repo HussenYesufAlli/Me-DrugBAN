@@ -10,7 +10,7 @@ class SimpleFusion(nn.Module):
         v_p_flat = v_p.view(v_p.size(0), -1)
         f = torch.cat([v_d_flat, v_p_flat], dim=1)
         return f
-
+    
 class BANLayer(nn.Module):
     def __init__(self, v_dim, q_dim, h_dim, h_out):
         """Bilinear Attention Network (BAN) Layer for DrugBAN."""
