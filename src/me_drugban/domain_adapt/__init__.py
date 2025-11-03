@@ -1,4 +1,4 @@
 """Domain adaptation helpers."""
-from .adaptor import DomainAdaptor
+from .adaptor import DomainAdaptationDTIDataset
 
-__all__ = ["DomainAdaptor"]
+__all__ = ["DomainAdaptationDTIDataset"]
